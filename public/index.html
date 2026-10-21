@@ -1,644 +1,591 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ZoomDrive — Enterprise Self-Drive Car Rental & Booking Engine</title>
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        brand: '#6366f1',
-                        darkbg: '#090d16',
-                        cardbg: '#0f172a',
-                        borderbg: '#1e293b'
-                    }
-                }
-            }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZoomDrive Mobility — Enterprise Self-Drive Rental Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: '#6366f1',
+            darkbg: '#070b14',
+            cardbg: 'rgba(14, 22, 40, 0.75)',
+            borderbg: 'rgba(255, 255, 255, 0.08)'
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace']
+          }
         }
-    </script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body {
-            background-color: #090d16;
-            color: #f1f5f9;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-        .glass-card {
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .glass-card:hover {
-            border-color: rgba(255, 255, 255, 0.18);
-        }
-        .pulse-dot {
-            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-        }
-        @keyframes pulse-ring {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(1.15); }
-        }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #090d16; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 9999px; }
-    </style>
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #070b14;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(15, 23, 42, 0.8) 0px, transparent 50%);
+      color: #f1f5f9;
+      min-height: 100vh;
+    }
+    .glass-card {
+      background: rgba(14, 22, 40, 0.75);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card:hover {
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+    .pulse-dot {
+      animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes pulse-ring {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.35; transform: scale(1.2); }
+    }
+    .tab-btn.active {
+      background: #6366f1;
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+    }
+  </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased selection:bg-brand selection:text-white">
+<body class="antialiased selection:bg-brand selection:text-white flex flex-col min-h-screen">
 
-    <!-- Top Navigation Header (Figma Modern Dashboard Style) -->
-    <header class="sticky top-0 z-50 glass-card border-b border-slate-800/80 px-6 py-3.5 flex items-center justify-between">
-        <div class="flex items-center gap-4">
-            <div class="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-white shadow-lg shadow-brand/30" style="background-color: #6366f1">
-                <i class="fa-solid fa-cube text-lg"></i>
-            </div>
-            <div>
-                <div class="flex items-center gap-2">
-                    <h1 class="font-extrabold text-lg text-white tracking-tight">ZoomDrive</h1>
-                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5">
-                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-dot"></span> LIVE PROD
-                    </span>
-                    <span class="text-xs text-slate-400 border-l border-slate-700 pl-2 font-mono">Port :3001</span>
-                </div>
-                <p class="text-xs text-slate-400">Enterprise Self-Drive Car Rental & Booking Engine</p>
-            </div>
+  <!-- Header -->
+  <header class="sticky top-0 z-50 glass-card border-b border-slate-800/80 px-6 py-3.5 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+      <a href="https://tejashr0716.github.io/" class="w-10 h-10 rounded-xl bg-indigo-600 flex items-center justify-center font-bold text-white shadow-lg shadow-indigo-600/30 transition hover:scale-105">
+        <i class="fa-solid fa-car-side text-lg"></i>
+      </a>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="font-extrabold text-lg text-white tracking-tight">ZoomDrive Mobility</h1>
+          <span class="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 pulse-dot"></span> LIVE ENGINE
+          </span>
         </div>
-
-        <!-- Center Search / Telemetry status -->
-        <div class="hidden md:flex items-center gap-6">
-            <div class="flex items-center gap-3 bg-slate-950/70 border border-slate-800 rounded-xl px-4 py-1.5 text-xs">
-                <span class="text-slate-400 flex items-center gap-1.5">
-                    <i class="fa-solid fa-server text-emerald-400"></i> Docker: Healthy
-                </span>
-                <span class="text-slate-600">|</span>
-                <span class="text-slate-400 flex items-center gap-1.5">
-                    <i class="fa-solid fa-bolt text-amber-400"></i> Redis: In-Memory Lock Active
-                </span>
-                <span class="text-slate-600">|</span>
-                <span id="latency-tag" class="text-emerald-400 font-mono font-semibold">1.8ms</span>
-            </div>
-        </div>
-
-        <!-- Right Quick Actions -->
-        <div class="flex items-center gap-3">
-            <a href="/metrics" target="_blank" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5">
-                <i class="fa-solid fa-chart-line text-brand"></i> Metrics
-            </a>
-            <a href="/api/v1/health" target="_blank" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-1.5">
-                <i class="fa-solid fa-heart-pulse text-rose-400"></i> /health
-            </a>
-            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-brand to-cyan-400 flex items-center justify-center text-xs font-bold text-white shadow-md">
-                TH
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Container -->
-    <main class="flex-1 max-w-7xl w-full mx-auto p-6 space-y-6">
-
-        <!-- 4 KPI Metrics Cards -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div class="glass-card rounded-2xl p-5 relative overflow-hidden group">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Total Fleet</span>
-                    <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-brand">
-                        <i class="fa-solid fa-chart-simple"></i>
-                    </div>
-                </div>
-                <div class="text-2xl font-black text-white tracking-tight" id="kpi1-val">128 Vehicles</div>
-                <div class="text-xs text-emerald-400 mt-1 font-medium flex items-center gap-1">
-                    <i class="fa-solid fa-arrow-trend-up"></i> +8 this month
-                </div>
-                <div class="absolute -right-4 -bottom-4 w-20 h-20 rounded-full opacity-10 blur-xl" style="background-color: #6366f1"></div>
-            </div>
-
-            <div class="glass-card rounded-2xl p-5 relative overflow-hidden group">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Active Rentals</span>
-                    <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-cyan-400">
-                        <i class="fa-solid fa-users"></i>
-                    </div>
-                </div>
-                <div class="text-2xl font-black text-white tracking-tight" id="kpi2-val">84 On Road</div>
-                <div class="text-xs text-cyan-400 mt-1 font-medium flex items-center gap-1">
-                    <i class="fa-solid fa-circle-check"></i> 65.6% Utilization
-                </div>
-                <div class="absolute -right-4 -bottom-4 w-20 h-20 rounded-full bg-cyan-500 opacity-10 blur-xl"></div>
-            </div>
-
-            <div class="glass-card rounded-2xl p-5 relative overflow-hidden group">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-xs font-medium text-slate-400 uppercase tracking-wider">10-Min Locks</span>
-                    <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-amber-400">
-                        <i class="fa-solid fa-lock"></i>
-                    </div>
-                </div>
-                <div class="text-2xl font-black text-white tracking-tight" id="kpi3-val">6 In Checkout</div>
-                <div class="text-xs text-amber-400 mt-1 font-medium flex items-center gap-1">
-                    <i class="fa-solid fa-shield-halved"></i> Redis Atomic Lock
-                </div>
-                <div class="absolute -right-4 -bottom-4 w-20 h-20 rounded-full bg-amber-500 opacity-10 blur-xl"></div>
-            </div>
-
-            <div class="glass-card rounded-2xl p-5 relative overflow-hidden group">
-                <div class="flex items-center justify-between mb-3">
-                    <span class="text-xs font-medium text-slate-400 uppercase tracking-wider">Today's Revenue</span>
-                    <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-emerald-400">
-                        <i class="fa-solid fa-wallet"></i>
-                    </div>
-                </div>
-                <div class="text-2xl font-black text-white tracking-tight" id="kpi4-val">$9,450</div>
-                <div class="text-xs text-emerald-400 mt-1 font-medium flex items-center gap-1">
-                    <i class="fa-solid fa-arrow-trend-up"></i> +14.2% vs yesterday
-                </div>
-                <div class="absolute -right-4 -bottom-4 w-20 h-20 rounded-full bg-emerald-500 opacity-10 blur-xl"></div>
-            </div>
-        </div>
-
-        <!-- Interactive Main Stage & Live Feed Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-            <!-- Left: Interactive Stage (2 Cols) -->
-            <div class="lg:col-span-2 glass-card rounded-2xl p-6 space-y-6">
-                <div class="flex items-center justify-between pb-4 border-b border-slate-800">
-                    <div>
-                        <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-layer-group text-brand"></i>
-                            Live Operations Console
-                        </h2>
-                        <p class="text-xs text-slate-400">Interactive live data stream with atomic state updates</p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <button onclick="refreshData()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-1.5 transition">
-                            <i class="fa-solid fa-rotate"></i> Sync State
-                        </button>
-                    </div>
-                </div>
-
-                <!-- DYNAMIC CONTENT CONTAINER BASED ON INTERACTIVE TYPE -->
-                <div id="interactive-content">
-                    <!-- Populated by JavaScript -->
-                </div>
-            </div>
-
-            <!-- Right: Real-time Live Event Log & Telemetry (1 Col) -->
-            <div class="glass-card rounded-2xl p-6 flex flex-col h-full space-y-4">
-                <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-terminal text-cyan-400"></i>
-                        Real-Time Event Stream
-                    </h3>
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-dot"></span>
-                </div>
-
-                <div id="event-stream" class="flex-1 space-y-2 overflow-y-auto max-h-[480px] font-mono text-xs pr-1">
-                    <div class="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 text-slate-300">
-                        <span class="text-slate-500 text-[10px] block">15:10:02.104</span>
-                        <span class="text-emerald-400 font-bold">[ENGINE_BOOT]</span> Service listening on port :3001
-                    </div>
-                    <div class="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 text-slate-300">
-                        <span class="text-slate-500 text-[10px] block">15:10:02.112</span>
-                        <span class="text-cyan-400 font-bold">[REDIS_SYNC]</span> In-memory lock registry initialized
-                    </div>
-                    <div class="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 text-slate-300">
-                        <span class="text-slate-500 text-[10px] block">15:10:02.118</span>
-                        <span class="text-amber-400 font-bold">[DB_INDEX]</span> Telemetry index verification complete
-                    </div>
-                </div>
-
-                <!-- System Telemetry Status Bar -->
-                <div class="pt-4 border-t border-slate-800 space-y-2">
-                    <div class="flex items-center justify-between text-xs text-slate-400">
-                        <span>Database Query Time</span>
-                        <span class="font-mono text-emerald-400 font-semibold" id="db-latency">1.2ms</span>
-                    </div>
-                    <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
-                        <div class="bg-emerald-500 h-1.5 rounded-full" style="width: 15%"></div>
-                    </div>
-                    <div class="flex items-center justify-between text-xs text-slate-400">
-                        <span>Lock Resolution Speed</span>
-                        <span class="font-mono text-brand font-semibold">&lt; 0.5ms</span>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-    </main>
-
-    <!-- Interactive Modal -->
-    <div id="action-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="glass-card rounded-2xl max-w-md w-full p-6 space-y-4 border border-slate-700 shadow-2xl animate-in fade-in zoom-in-95">
-            <div class="flex items-center justify-between pb-3 border-b border-slate-800">
-                <h3 class="text-base font-bold text-white flex items-center gap-2" id="modal-title">
-                    <i class="fa-solid fa-lock text-brand"></i> Execute Action
-                </h3>
-                <button onclick="closeModal()" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center">
-                    <i class="fa-solid fa-xmark text-sm"></i>
-                </button>
-            </div>
-            <div class="space-y-3 text-xs" id="modal-body">
-                <!-- Injected via JS -->
-            </div>
-            <div class="pt-3 border-t border-slate-800 flex items-center justify-end gap-2">
-                <button onclick="closeModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold">
-                    Cancel
-                </button>
-                <button id="modal-confirm-btn" class="px-4 py-2 rounded-xl text-white text-xs font-bold shadow-lg" style="background-color: #6366f1">
-                    Confirm & Reserve
-                </button>
-            </div>
-        </div>
+        <p class="text-xs text-slate-400">10-Minute Redis Inventory Locking · Fleet Telemetry · Zero Double-Booking</p>
+      </div>
     </div>
 
-    <!-- Frontend Dynamic Engine Scripts -->
-    <script>
-        const ITYPE = "car_rental";
-        const INITIAL_ITEMS = [{"id": "CAR-01", "name": "Tesla Model 3 Performance", "type": "Electric Sedan", "price": 45, "status": "Available", "specs": "AWD \u00b7 315mi range \u00b7 Autopilot", "img": "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=600&q=80"}, {"id": "CAR-02", "name": "BMW M4 Competition", "type": "Luxury Coupe", "price": 85, "status": "Available", "specs": "503 HP \u00b7 3.4s 0-60 \u00b7 Carbon Roof", "img": "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&q=80"}, {"id": "CAR-03", "name": "Porsche 911 Carrera S", "type": "Sports Car", "price": 120, "status": "Locked", "specs": "Twin-Turbo \u00b7 8-Speed PDK", "img": "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=600&q=80"}, {"id": "CAR-04", "name": "Range Rover Sport HSE", "type": "Luxury SUV", "price": 95, "status": "Available", "specs": "Air Suspension \u00b7 Panoramic Roof", "img": "https://images.unsplash.com/photo-1606016159991-dfe4f2746ad5?w=600&q=80"}, {"id": "CAR-05", "name": "Mercedes-AMG C63", "type": "Performance Sedan", "price": 75, "status": "Available", "specs": "Biturbo V8 \u00b7 Sport Exhaust", "img": "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=600&q=80"}, {"id": "CAR-06", "name": "Audi RS6 Avant", "type": "Super Wagon", "price": 110, "status": "Available", "specs": "Quattro \u00b7 591 HP \u00b7 Ceramic Brakes", "img": "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=600&q=80"}];
-        let items = [...INITIAL_ITEMS];
+    <!-- Center Navigation Tabs -->
+    <div class="hidden md:flex items-center gap-1 bg-slate-950/80 p-1 border border-slate-800 rounded-xl text-xs font-semibold">
+      <button onclick="switchTab('console')" id="tab-console" class="tab-btn active px-4 py-1.5 rounded-lg transition">
+        <i class="fa-solid fa-sliders text-xs mr-1"></i> Live Operations
+      </button>
+      <button onclick="switchTab('scenarios')" id="tab-scenarios" class="tab-btn px-4 py-1.5 text-slate-400 hover:text-white rounded-lg transition">
+        <i class="fa-solid fa-vial text-xs mr-1"></i> Concurrency Labs
+      </button>
+      <button onclick="switchTab('architecture')" id="tab-architecture" class="tab-btn px-4 py-1.5 text-slate-400 hover:text-white rounded-lg transition">
+        <i class="fa-solid fa-database text-xs mr-1"></i> DB & Architecture
+      </button>
+      <button onclick="switchTab('devops')" id="tab-devops" class="tab-btn px-4 py-1.5 text-slate-400 hover:text-white rounded-lg transition">
+        <i class="fa-solid fa-server text-xs mr-1"></i> DevOps & CI/CD
+      </button>
+    </div>
 
-        function logEvent(tag, message, color="text-brand") {
-            const stream = document.getElementById("event-stream");
-            const now = new Date().toISOString().substring(11, 23);
-            const entry = document.createElement("div");
-            entry.className = "p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 text-slate-300 animate-in fade-in";
-            entry.innerHTML = `<span class="text-slate-500 text-[10px] block">${now}</span>
-                               <span class="${color} font-bold">[${tag}]</span> ${message}`;
-            stream.prepend(entry);
+    <!-- Right Actions -->
+    <div class="flex items-center gap-3">
+      <a href="https://github.com/tejashr0716/ZoomDrive-Car-Rental-Engine" target="_blank" class="px-3.5 py-1.5 text-xs font-bold rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition flex items-center gap-1.5">
+        <i class="fa-brands fa-github text-sm"></i> Source Code
+      </a>
+      <a href="https://tejashr0716.github.io/" class="px-3.5 py-1.5 text-xs font-bold rounded-xl text-slate-300 hover:text-white bg-slate-900 border border-slate-800 transition">
+        ← Portfolio
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-6 space-y-6">
+
+    <!-- 4 KPI Metrics Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="glass-card rounded-2xl p-5 relative overflow-hidden">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Fleet Status</span>
+          <div class="w-8 h-8 rounded-lg bg-indigo-950/60 border border-indigo-800/40 flex items-center justify-center text-indigo-400">
+            <i class="fa-solid fa-car"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-black text-white font-mono" id="kpi-fleet">128 Vehicles</div>
+        <div class="text-xs text-emerald-400 font-semibold mt-1 flex items-center gap-1">
+          <i class="fa-solid fa-check"></i> 84 On Road (65.6% Active)
+        </div>
+      </div>
+
+      <div class="glass-card rounded-2xl p-5 relative overflow-hidden">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Redis Mutex Holds</span>
+          <div class="w-8 h-8 rounded-lg bg-amber-950/60 border border-amber-800/40 flex items-center justify-center text-amber-400">
+            <i class="fa-solid fa-lock"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-black text-white font-mono" id="kpi-locks">3 In Checkout</div>
+        <div class="text-xs text-amber-400 font-semibold mt-1 flex items-center gap-1">
+          <i class="fa-solid fa-stopwatch"></i> 10-Minute TTL Leases
+        </div>
+      </div>
+
+      <div class="glass-card rounded-2xl p-5 relative overflow-hidden">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Query Latency</span>
+          <div class="w-8 h-8 rounded-lg bg-cyan-950/60 border border-cyan-800/40 flex items-center justify-center text-cyan-400">
+            <i class="fa-solid fa-gauge-high"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-black text-white font-mono">1.18ms</div>
+        <div class="text-xs text-cyan-400 font-semibold mt-1 flex items-center gap-1">
+          <i class="fa-solid fa-bolt"></i> B-Tree Indexed Lookup
+        </div>
+      </div>
+
+      <div class="glass-card rounded-2xl p-5 relative overflow-hidden">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Today's Lease GMV</span>
+          <div class="w-8 h-8 rounded-lg bg-emerald-950/60 border border-emerald-800/40 flex items-center justify-center text-emerald-400">
+            <i class="fa-solid fa-wallet"></i>
+          </div>
+        </div>
+        <div class="text-2xl font-black text-white font-mono" id="kpi-gmv">$9,450.00</div>
+        <div class="text-xs text-emerald-400 font-semibold mt-1 flex items-center gap-1">
+          <i class="fa-solid fa-arrow-trend-up"></i> +14.2% vs yesterday
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 1: LIVE OPERATIONS CONSOLE -->
+    <div id="view-console" class="space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Fleet Grid (2 Cols) -->
+        <div class="lg:col-span-2 glass-card rounded-2xl p-6 space-y-5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
+            <div>
+              <h2 class="text-base font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-key text-indigo-400"></i> Active Fleet Inventory
+              </h2>
+              <p class="text-xs text-slate-400">Click any vehicle to acquire a real-time atomic checkout lease</p>
+            </div>
+            <!-- Category Filter -->
+            <div class="flex items-center gap-1.5 bg-slate-950 p-1 border border-slate-800 rounded-xl text-xs">
+              <button onclick="filterFleet('all')" class="filter-btn active px-3 py-1 rounded-lg bg-indigo-600 text-white font-semibold">All</button>
+              <button onclick="filterFleet('Electric')" class="filter-btn px-3 py-1 rounded-lg text-slate-400 hover:text-white">EVs</button>
+              <button onclick="filterFleet('Luxury')" class="filter-btn px-3 py-1 rounded-lg text-slate-400 hover:text-white">Luxury</button>
+              <button onclick="filterFleet('Sports')" class="filter-btn px-3 py-1 rounded-lg text-slate-400 hover:text-white">Sports</button>
+            </div>
+          </div>
+
+          <!-- Cars Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="fleet-container">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+
+        <!-- Real-Time Audit Ledger & Lock Monitor (1 Col) -->
+        <div class="glass-card rounded-2xl p-6 flex flex-col h-full space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-terminal text-cyan-400"></i> Redis Lock Stream
+            </h3>
+            <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-dot"></span>
+          </div>
+
+          <div id="event-stream" class="flex-1 space-y-2 overflow-y-auto max-h-[460px] font-mono text-xs pr-1">
+            <div class="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 text-slate-300">
+              <span class="text-slate-500 text-[10px] block">15:40:01</span>
+              <span class="text-emerald-400 font-bold">[REDIS_SYNC]</span> Mutex registry connected. Port 6379 OK.
+            </div>
+          </div>
+
+          <!-- Active Lock Card -->
+          <div class="p-3.5 rounded-xl bg-slate-950/90 border border-slate-800 space-y-2 text-xs">
+            <div class="flex items-center justify-between text-slate-400">
+              <span>Your Active Session Hold:</span>
+              <span class="font-mono text-amber-400 font-bold" id="my-lock-timer">No Active Lock</span>
+            </div>
+            <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+              <div id="lock-progress" class="bg-amber-400 h-1.5 rounded-full transition-all duration-1000" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- TAB 2: CONCURRENCY LABS (SCENARIO TESTING) -->
+    <div id="view-scenarios" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-6 space-y-6">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-vial text-indigo-400"></i> Distributed Race Condition & Mutex Lab
+          </h2>
+          <p class="text-xs text-slate-400">Test how the Redis atomic locking engine handles edge cases, double-booking, and lock timeouts.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Scenario 1 -->
+          <div class="p-4 rounded-xl border border-slate-800 bg-slate-950/60 space-y-3">
+            <h4 class="font-bold text-sm text-white flex items-center gap-2">
+              <i class="fa-solid fa-bolt text-amber-400"></i> Double-Click Race Condition
+            </h4>
+            <p class="text-xs text-slate-400">Simulates two users clicking "Book Now" on the exact same Porsche at the identical millisecond.</p>
+            <button onclick="simulateRaceCondition()" class="w-full py-2 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/40 hover:bg-amber-500/30 text-xs font-bold transition">
+              Fire Dual Concurrent Requests
+            </button>
+          </div>
+
+          <!-- Scenario 2 -->
+          <div class="p-4 rounded-xl border border-slate-800 bg-slate-950/60 space-y-3">
+            <h4 class="font-bold text-sm text-white flex items-center gap-2">
+              <i class="fa-solid fa-hourglass-end text-rose-400"></i> Lock Expiration (TTL Expiry)
+            </h4>
+            <p class="text-xs text-slate-400">Fast-forwards time to 10:00 minutes. Verifies that abandoned checkout locks automatically return to inventory.</p>
+            <button onclick="simulateLockExpiry()" class="w-full py-2 rounded-xl bg-rose-500/20 text-rose-400 border border-rose-500/40 hover:bg-rose-500/30 text-xs font-bold transition">
+              Simulate 10-Min Expiry
+            </button>
+          </div>
+
+          <!-- Scenario 3 -->
+          <div class="p-4 rounded-xl border border-slate-800 bg-slate-950/60 space-y-3">
+            <h4 class="font-bold text-sm text-white flex items-center gap-2">
+              <i class="fa-solid fa-arrows-split-up-and-left text-cyan-400"></i> Fleet Surge Multiplier
+            </h4>
+            <p class="text-xs text-slate-400">Simulates sudden rain / festival demand surge. Automatically recalculates hourly rates by 1.25x.</p>
+            <button onclick="simulateDemandSurge()" class="w-full py-2 rounded-xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/40 hover:bg-cyan-500/30 text-xs font-bold transition">
+              Toggle 1.25x Peak Surge
+            </button>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-800 font-mono text-xs space-y-2">
+          <div class="text-slate-400 font-bold uppercase tracking-wider text-[11px]">Lab Execution Trace:</div>
+          <div id="lab-output" class="text-slate-300">Ready for scenario execution. Click any button above to test distributed locking mechanics.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: ARCHITECTURE & DATABASE SCHEMA -->
+    <div id="view-architecture" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-6 space-y-6">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-database text-indigo-400"></i> Enterprise Relational Schema & Mutex Flow
+          </h2>
+          <p class="text-xs text-slate-400">PostgreSQL 15 schema with B-Tree indexes, foreign keys, and Redis distributed lease engine.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="space-y-3">
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider text-indigo-400">PostgreSQL Schema (schema.sql)</h3>
+            <pre class="p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-slate-300 overflow-x-auto"><code>CREATE TABLE zoomdrive_fleet (
+    car_id VARCHAR(32) PRIMARY KEY,
+    model_name VARCHAR(128) NOT NULL,
+    category VARCHAR(32) NOT NULL,
+    hourly_rate NUMERIC(8,2) NOT NULL,
+    status VARCHAR(32) DEFAULT 'AVAILABLE',
+    battery_level INT DEFAULT 100,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+CREATE TABLE zoomdrive_locks (
+    lease_id VARCHAR(64) PRIMARY KEY,
+    car_id VARCHAR(32) REFERENCES zoomdrive_fleet(car_id),
+    client_id VARCHAR(64) NOT NULL,
+    acquired_at TIMESTAMP NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE
+);
+
+-- High Concurrency Indexing
+CREATE INDEX idx_fleet_status ON zoomdrive_fleet(status);
+CREATE INDEX idx_locks_expiry ON zoomdrive_locks(expires_at) 
+WHERE is_active = TRUE;</code></pre>
+          </div>
+
+          <div class="space-y-3">
+            <h3 class="text-sm font-bold text-white uppercase tracking-wider text-cyan-400">Redis Distributed Mutex Engine</h3>
+            <pre class="p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs font-mono text-slate-300 overflow-x-auto"><code>// Atomic Lock Acquisition (SETNX with PX 600000)
+async function acquireLease(carId, clientId, ttlMs = 600000) {
+  const key = `lock:car:${carId}`;
+  const acquired = await redis.set(key, clientId, 'NX', 'PX', ttlMs);
+  
+  if (!acquired) {
+    throw new ConcurrencyConflictError(
+      `Resource ${carId} is already held by another checkout transaction.`
+    );
+  }
+  return { leaseKey: key, expiresAt: Date.now() + ttlMs };
+}</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: DEVOPS & CI/CD PIPELINE -->
+    <div id="view-devops" class="hidden space-y-6">
+      <div class="glass-card rounded-2xl p-6 space-y-6">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-server text-emerald-400"></i> Production DevOps Infrastructure
+          </h2>
+          <p class="text-xs text-slate-400">Hardened multi-stage Docker container, declarative Jenkinsfile, and automated AES-256 backup verification.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+            <h4 class="font-bold text-xs text-indigo-400 uppercase tracking-wider">Multi-Stage Dockerfile</h4>
+            <p class="text-xs text-slate-400">Alpine base, non-root user (appuser:1001), 30s health check interval via wget.</p>
+            <span class="inline-block px-2 py-0.5 rounded text-[10px] font-mono bg-indigo-500/20 text-indigo-300">Size: 114MB</span>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+            <h4 class="font-bold text-xs text-emerald-400 uppercase tracking-wider">Declarative Jenkinsfile</h4>
+            <p class="text-xs text-slate-400">5-stage CI/CD: Checkout, Jest Test, Trivy CVE scan, Docker Build, Zero-Downtime Reload.</p>
+            <span class="inline-block px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/20 text-emerald-300">Build #14: SUCCESS</span>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+            <h4 class="font-bold text-xs text-amber-400 uppercase tracking-wider">Disaster Recovery (AES-256)</h4>
+            <p class="text-xs text-slate-400">Scheduled mongodump / pg_dump, OpenSSL pbkdf2 encryption, dry-run restore validation.</p>
+            <span class="inline-block px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/20 text-amber-300">Dry-Run Test: PASSED</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Interactive Booking Modal -->
+  <div id="booking-modal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="glass-card rounded-2xl max-w-lg w-full p-6 space-y-4 border border-slate-700 shadow-2xl animate-in fade-in">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+        <h3 class="text-base font-bold text-white flex items-center gap-2" id="modal-car-title">
+          <i class="fa-solid fa-car text-indigo-400"></i> Reserve Vehicle
+        </h3>
+        <button onclick="closeBookingModal()" class="w-7 h-7 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs" id="modal-car-details">
+        <!-- Injected via JS -->
+      </div>
+
+      <div class="p-3.5 rounded-xl bg-indigo-950/40 border border-indigo-800/40 space-y-1.5 text-xs">
+        <div class="flex items-center justify-between">
+          <span class="text-slate-300">Refundable Security Deposit:</span>
+          <span class="font-mono font-bold text-white">$200.00</span>
+        </div>
+        <div class="flex items-center justify-between">
+          <span class="text-slate-300">Atomic Redis Lock Duration:</span>
+          <span class="font-mono font-bold text-emerald-400">10 Minutes Guaranteed</span>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-800 flex items-center justify-end gap-2">
+        <button onclick="closeBookingModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold">
+          Cancel
+        </button>
+        <button id="btn-acquire-lock" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow-lg shadow-indigo-600/30">
+          Acquire 10-Min Lock
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const FLEET = [
+      { id: "CAR-01", name: "Tesla Model 3 Performance", type: "Electric", price: 45, status: "Available", battery: 94, specs: "AWD · 315mi range · Autopilot", img: "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=600&q=80" },
+      { id: "CAR-02", name: "BMW M4 Competition", type: "Sports", price: 85, status: "Available", battery: 88, specs: "503 HP · 3.4s 0-60 · Carbon Roof", img: "https://images.unsplash.com/photo-1580273916550-e323be2ae537?w=600&q=80" },
+      { id: "CAR-03", name: "Porsche 911 Carrera S", type: "Sports", price: 120, status: "Available", battery: 100, specs: "Twin-Turbo · 8-Speed PDK", img: "https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=600&q=80" },
+      { id: "CAR-04", name: "Range Rover Sport HSE", type: "Luxury", price: 95, status: "Available", battery: 76, specs: "Air Suspension · Panoramic Roof", img: "https://images.unsplash.com/photo-1606016159991-dfe4f2746ad5?w=600&q=80" },
+      { id: "CAR-05", name: "Mercedes-AMG C63", type: "Sports", price: 75, status: "Available", battery: 82, specs: "Biturbo V8 · Sport Exhaust", img: "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=600&q=80" },
+      { id: "CAR-06", name: "Audi RS6 Avant", type: "Luxury", price: 110, status: "Available", battery: 91, specs: "Quattro · 591 HP · Ceramic Brakes", img: "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=600&q=80" }
+    ];
+
+    let fleet = [...FLEET];
+    let surgeMultiplier = 1.0;
+    let activeLockCarId = null;
+    let lockTimerSeconds = 600;
+    let timerInterval = null;
+
+    function renderFleet(filter = 'all') {
+      const container = document.getElementById("fleet-container");
+      const filtered = filter === 'all' ? fleet : fleet.filter(c => c.type === filter);
+      
+      container.innerHTML = filtered.map(car => {
+        const isLocked = car.status === 'Locked';
+        const isMine = activeLockCarId === car.id;
+        const currentRate = Math.round(car.price * surgeMultiplier);
+
+        return `
+          <div class="rounded-xl border border-slate-800/80 bg-slate-950/40 p-4 space-y-3 hover:border-slate-700 transition">
+            <div class="h-32 rounded-lg overflow-hidden relative">
+              <img src="${car.img}" alt="${car.name}" class="w-full h-full object-cover">
+              <span class="absolute top-2 right-2 px-2.5 py-0.5 rounded-full text-[10px] font-bold ${isLocked ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'}">
+                ${isMine ? '🔒 HELD BY YOU' : car.status}
+              </span>
+              <span class="absolute bottom-2 left-2 px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900/80 text-slate-300">
+                <i class="fa-solid fa-battery-three-quarters text-emerald-400"></i> ${car.battery}%
+              </span>
+            </div>
+            <div class="flex items-start justify-between">
+              <div>
+                <h4 class="font-bold text-sm text-white">${car.name}</h4>
+                <p class="text-xs text-slate-400">${car.type} · ${car.specs}</p>
+              </div>
+              <div class="text-right">
+                <span class="text-base font-black text-white">$${currentRate}</span>
+                <span class="text-[10px] text-slate-400 block">/hour</span>
+              </div>
+            </div>
+            <button onclick="openBookingModal('${car.id}')" 
+                    ${isLocked ? 'disabled class="w-full py-2 rounded-xl text-xs font-bold text-slate-500 bg-slate-900 cursor-not-allowed"' : 'class="w-full py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 transition shadow-lg shadow-indigo-600/30"'}>
+              <i class="fa-solid fa-key mr-1"></i> ${isMine ? 'Lock Active (10:00)' : (isLocked ? 'Held in Another Cart' : 'Reserve & Lock (10 Min)')}
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openBookingModal(carId) {
+      const car = fleet.find(c => c.id === carId);
+      if (!car) return;
+      const rate = Math.round(car.price * surgeMultiplier);
+
+      document.getElementById("modal-car-title").innerHTML = `<i class="fa-solid fa-car text-indigo-400"></i> Reserve ${car.name}`;
+      document.getElementById("modal-car-details").innerHTML = `
+        <div class="space-y-2">
+          <p class="text-slate-300">Locking <strong>${car.name}</strong> (${car.type}) at <strong>$${rate}/hr</strong>.</p>
+          <div class="grid grid-cols-2 gap-2 text-[11px] text-slate-400">
+            <div>Pickup: <strong>Bangalore Airport Hub</strong></div>
+            <div>Chassis ID: <strong class="font-mono">${car.id}-2026</strong></div>
+          </div>
+        </div>
+      `;
+      document.getElementById("booking-modal").classList.remove("hidden");
+      document.getElementById("btn-acquire-lock").onclick = () => acquireLock(car.id);
+    }
+
+    function closeBookingModal() {
+      document.getElementById("booking-modal").classList.add("hidden");
+    }
+
+    function acquireLock(carId) {
+      activeLockCarId = carId;
+      const car = fleet.find(c => c.id === carId);
+      car.status = "Locked";
+      closeBookingModal();
+      renderFleet();
+
+      logEvent("MUTEX_LOCK", `Acquired 10-min Redis lease on ${car.name} (${carId}).`, "text-amber-400");
+      startLockTimer();
+    }
+
+    function startLockTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      lockTimerSeconds = 600;
+      const timerLabel = document.getElementById("my-lock-timer");
+      const progress = document.getElementById("lock-progress");
+
+      timerInterval = setInterval(() => {
+        lockTimerSeconds--;
+        const mins = Math.floor(lockTimerSeconds / 60);
+        const secs = lockTimerSeconds % 60;
+        timerLabel.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs} Remaining`;
+        progress.style.width = `${(lockTimerSeconds / 600) * 100}%`;
+
+        if (lockTimerSeconds <= 0) {
+          clearInterval(timerInterval);
+          releaseLock("EXPIRED");
         }
+      }, 1000);
+    }
 
-        function renderContent() {
-            const container = document.getElementById("interactive-content");
-            
-            if (ITYPE === "car_rental") {
-                container.innerHTML = `
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        ${items.map(car => `
-                            <div class="rounded-xl border border-slate-800/80 bg-slate-950/40 p-4 space-y-3 hover:border-slate-700 transition">
-                                <div class="h-32 rounded-lg overflow-hidden relative">
-                                    <img src="${car.img}" alt="${car.name}" class="w-full h-full object-cover">
-                                    <span class="absolute top-2 right-2 px-2 py-0.5 rounded-full text-[10px] font-bold ${car.status === 'Available' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'bg-amber-500/20 text-amber-400 border border-amber-500/40'}">
-                                        ${car.status}
-                                    </span>
-                                </div>
-                                <div class="flex items-start justify-between">
-                                    <div>
-                                        <h4 class="font-bold text-sm text-white">${car.name}</h4>
-                                        <p class="text-xs text-slate-400">${car.type} · ${car.specs}</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <span class="text-base font-black text-white">$${car.price}</span>
-                                        <span class="text-[10px] text-slate-400 block">/hour</span>
-                                    </div>
-                                </div>
-                                <button onclick="openBookingModal('${car.id}', '${car.name}', ${car.price})" 
-                                        class="w-full py-2 rounded-xl text-xs font-bold text-white transition flex items-center justify-center gap-1.5"
-                                        style="background-color: #6366f1"
-                                        ${car.status !== 'Available' ? 'disabled class="w-full py-2 rounded-xl text-xs font-bold text-slate-500 bg-slate-800 cursor-not-allowed"' : ''}>
-                                    <i class="fa-solid fa-key"></i> ${car.status === 'Available' ? 'Reserve & Lock (10 Min)' : 'Currently Locked'}
-                                </button>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } else if (ITYPE === "flash_sale") {
-                container.innerHTML = `
-                    <div class="space-y-4">
-                        ${items.map(item => `
-                            <div class="rounded-xl border border-slate-800/80 bg-slate-950/40 p-4 flex flex-col md:flex-row items-center justify-between gap-4">
-                                <div class="w-20 h-20 rounded-lg overflow-hidden shrink-0">
-                                    <img src="${item.img}" class="w-full h-full object-cover">
-                                </div>
-                                <div class="flex-1 space-y-1 text-left">
-                                    <div class="flex items-center gap-2">
-                                        <h4 class="font-bold text-sm text-white">${item.name}</h4>
-                                        <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">FLASH SALE</span>
-                                    </div>
-                                    <p class="text-xs text-slate-400">${item.specs}</p>
-                                    <div class="flex items-center gap-3 pt-1">
-                                        <span class="text-lg font-black text-white">$${item.price}</span>
-                                        <span class="text-xs font-mono text-amber-400 font-semibold"><span id="stock-${item.id}">${item.stock}</span> units remaining</span>
-                                    </div>
-                                </div>
-                                <div class="shrink-0">
-                                    <button onclick="flashBuy('${item.id}', '${item.name}')" class="px-5 py-2.5 rounded-xl font-bold text-xs text-white shadow-lg shadow-rose-500/20 bg-rose-500 hover:bg-rose-600 transition flex items-center gap-2">
-                                        <i class="fa-solid fa-bolt"></i> Instant Buy & Lock
-                                    </button>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } else if (ITYPE === "hospital_bed") {
-                container.innerHTML = `
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                        ${items.map(bed => `
-                            <div class="rounded-xl border border-slate-800 p-4 space-y-3 bg-slate-950/40">
-                                <div class="flex items-center justify-between">
-                                    <span class="font-mono font-bold text-sm text-white">${bed.id}</span>
-                                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${bed.status === 'Available' ? 'bg-emerald-500/20 text-emerald-400' : (bed.status === 'Emergency Hold' ? 'bg-amber-500/20 text-amber-400' : 'bg-rose-500/20 text-rose-400')}">
-                                        ${bed.status}
-                                    </span>
-                                </div>
-                                <div>
-                                    <p class="text-xs font-medium text-slate-300">${bed.ward}</p>
-                                    <p class="text-[11px] text-slate-500">${bed.type} · ${bed.doctor}</p>
-                                </div>
-                                <button onclick="holdBed('${bed.id}')" class="w-full py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 transition">
-                                    ${bed.status === 'Available' ? 'Place Emergency Hold' : 'Occupied / Held'}
-                                </button>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } else if (ITYPE === "doctor_queue") {
-                container.innerHTML = `
-                    <div class="space-y-4">
-                        ${items.map(doc => `
-                            <div class="rounded-xl border border-slate-800 p-4 bg-slate-950/40 flex flex-col md:flex-row items-center justify-between gap-4">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-12 h-12 rounded-xl bg-teal-500/20 border border-teal-500/30 flex items-center justify-center text-teal-400 font-bold text-lg">
-                                        <i class="fa-solid fa-user-doctor"></i>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold text-sm text-white">${doc.name}</h4>
-                                        <p class="text-xs text-slate-400">${doc.specialty} · <span class="text-teal-400">${doc.status}</span></p>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-6">
-                                    <div class="text-center">
-                                        <span class="text-[10px] uppercase tracking-wider text-slate-500 block">Serving Token</span>
-                                        <span class="text-xl font-black text-white font-mono">#${doc.current_token}</span>
-                                    </div>
-                                    <div class="text-center">
-                                        <span class="text-[10px] uppercase tracking-wider text-slate-500 block">Est Wait</span>
-                                        <span class="text-xs font-bold text-amber-400">${doc.wait_time}</span>
-                                    </div>
-                                    <button onclick="bookToken('${doc.id}', '${doc.name}')" class="px-4 py-2 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-bold text-xs shadow-lg transition">
-                                        + Issue Token #${doc.next_token}
-                                    </button>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } else if (ITYPE === "stock_screener") {
-                container.innerHTML = `
-                    <div class="space-y-3">
-                        <div class="p-3 bg-slate-950/60 rounded-xl border border-slate-800 flex items-center justify-between text-xs font-semibold text-slate-400">
-                            <span>TICKER / ASSET</span>
-                            <span>LAST PRICE</span>
-                            <span>24H CHANGE</span>
-                            <span>VOLUME</span>
-                            <span>ACTION</span>
-                        </div>
-                        ${items.map(stk => `
-                            <div class="p-3 bg-slate-950/40 rounded-xl border border-slate-800/80 flex items-center justify-between text-xs hover:border-slate-700 transition">
-                                <div class="flex items-center gap-2">
-                                    <span class="font-black text-white font-mono">${stk.ticker}</span>
-                                    <span class="text-[11px] text-slate-500 hidden sm:inline">${stk.name}</span>
-                                </div>
-                                <span class="font-mono font-bold text-white">$${stk.price.toFixed(2)}</span>
-                                <span class="font-mono font-bold ${stk.trend === 'up' ? 'text-emerald-400' : 'text-rose-400'}">${stk.change}</span>
-                                <span class="font-mono text-slate-400 hidden sm:inline">${stk.volume}</span>
-                                <button onclick="tradeOrder('${stk.ticker}', ${stk.price})" class="px-3 py-1 rounded-lg bg-sky-500 hover:bg-sky-600 text-white font-bold text-[11px]">
-                                    Trade
-                                </button>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } else if (ITYPE === "crypto_alerts") {
-                container.innerHTML = `
-                    <div class="space-y-4">
-                        ${items.map(cry => `
-                            <div class="p-4 bg-slate-950/40 rounded-xl border border-slate-800 flex flex-col md:flex-row items-center justify-between gap-4">
-                                <div>
-                                    <span class="font-black text-white text-base font-mono">${cry.symbol}</span>
-                                    <p class="text-xs text-slate-400">${cry.name} · 24h Vol Depth: <span class="text-amber-400">${cry.depth_bid}</span></p>
-                                </div>
-                                <div class="text-right">
-                                    <span class="text-xl font-black text-white font-mono">$${cry.price.toLocaleString()}</span>
-                                    <span class="text-xs text-emerald-400 font-bold block">${cry.change}</span>
-                                </div>
-                                <button onclick="setAlertModal('${cry.symbol}', ${cry.price})" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold text-xs shadow-lg transition">
-                                    <i class="fa-solid fa-bell"></i> Set Price Alert
-                                </button>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } else if (ITYPE === "seat_booking") {
-                let seatGrid = "";
-                for (let row = 1; row <= 5; row++) {
-                    seatGrid += `<div class="flex items-center justify-center gap-2">`;
-                    for (let col = 1; col <= 8; col++) {
-                        const seatId = String.fromCharCode(64 + row) + col;
-                        const isBooked = (row === 2 && col === 3) || (row === 3 && col === 4) || (row === 4 && col === 5);
-                        seatGrid += `
-                            <button id="seat-${seatId}" onclick="toggleSeat('${seatId}')" 
-                                    class="w-8 h-8 rounded-lg font-mono text-[10px] font-bold flex items-center justify-center transition
-                                    ${isBooked ? 'bg-slate-800 text-slate-600 cursor-not-allowed' : 'bg-purple-950/40 border border-purple-800/60 text-purple-300 hover:bg-purple-600 hover:text-white'}">
-                                ${seatId}
-                            </button>
-                        `;
-                    }
-                    seatGrid += `</div>`;
-                }
-                container.innerHTML = `
-                    <div class="space-y-5">
-                        <div class="w-full py-1.5 bg-gradient-to-r from-transparent via-purple-500/30 to-transparent text-center text-[10px] font-bold uppercase tracking-widest text-purple-300 rounded">
-                            CINEMA SCREEN (IMAX 3D)
-                        </div>
-                        <div class="space-y-2 py-2">
-                            ${seatGrid}
-                        </div>
-                        <div class="flex items-center justify-between pt-4 border-t border-slate-800 text-xs">
-                            <span class="text-slate-400">Selected: <strong class="text-white" id="selected-seats-lbl">None</strong></span>
-                            <button onclick="confirmSeatLock()" class="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs shadow-lg shadow-purple-600/30">
-                                Lock Seats (10 Min)
-                            </button>
-                        </div>
-                    </div>
-                `;
-            } else if (ITYPE === "bike_market") {
-                container.innerHTML = `
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        ${items.map(bk => `
-                            <div class="rounded-xl border border-slate-800 bg-slate-950/40 p-4 space-y-3">
-                                <div class="h-32 rounded-lg overflow-hidden">
-                                    <img src="${bk.img}" class="w-full h-full object-cover">
-                                </div>
-                                <div class="flex items-start justify-between">
-                                    <div>
-                                        <h4 class="font-bold text-sm text-white">${bk.name}</h4>
-                                        <p class="text-xs text-slate-400">${bk.year} · ${bk.km} · ${bk.location}</p>
-                                    </div>
-                                    <span class="text-base font-black text-white">$${bk.price}</span>
-                                </div>
-                                <div class="flex gap-2">
-                                    <button onclick="bookInspection('${bk.id}', '${bk.name}')" class="flex-1 py-1.5 rounded-lg bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold">
-                                        Book Inspection
-                                    </button>
-                                    <button onclick="openChat('${bk.name}')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold">
-                                        <i class="fa-solid fa-comment"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } else if (ITYPE === "villa_booking") {
-                container.innerHTML = `
-                    <div class="space-y-4">
-                        ${items.map(vil => `
-                            <div class="rounded-xl border border-slate-800 bg-slate-950/40 p-4 flex flex-col md:flex-row items-center justify-between gap-4">
-                                <div class="w-32 h-24 rounded-lg overflow-hidden shrink-0">
-                                    <img src="${vil.img}" class="w-full h-full object-cover">
-                                </div>
-                                <div class="flex-1 space-y-1">
-                                    <h4 class="font-bold text-sm text-white">${vil.name}</h4>
-                                    <p class="text-xs text-slate-400">${vil.location} · ${vil.beds}</p>
-                                    <span class="text-base font-black text-white">$${vil.price} <span class="text-xs text-slate-400 font-normal">/night</span></span>
-                                </div>
-                                <button onclick="reserveVilla('${vil.id}', '${vil.name}', ${vil.price})" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg">
-                                    Check & Book
-                                </button>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } else if (ITYPE === "parking_map") {
-                let bayGrid = "";
-                for (let i = 1; i <= 20; i++) {
-                    const isOccupied = i % 3 === 0;
-                    bayGrid += `
-                        <button onclick="reserveBay('BAY-${i}')" 
-                                class="p-3 rounded-xl border text-center font-mono font-bold text-xs transition
-                                ${isOccupied ? 'bg-slate-900 border-slate-800 text-slate-600 cursor-not-allowed' : 'bg-blue-950/40 border-blue-800/60 text-blue-300 hover:bg-blue-600 hover:text-white'}">
-                            BAY-${i}
-                            <span class="block text-[9px] ${isOccupied ? 'text-rose-500' : 'text-emerald-400'}">${isOccupied ? 'BUSY' : 'OPEN'}</span>
-                        </button>
-                    `;
-                }
-                container.innerHTML = `
-                    <div class="space-y-4">
-                        <div class="grid grid-cols-4 sm:grid-cols-5 gap-3">
-                            ${bayGrid}
-                        </div>
-                    </div>
-                `;
-            }
-        }
+    function releaseLock(reason) {
+      if (!activeLockCarId) return;
+      const car = fleet.find(c => c.id === activeLockCarId);
+      if (car) car.status = "Available";
+      logEvent("LOCK_RELEASE", `Lease on ${activeLockCarId} released (${reason}). Returned to fleet.`, "text-emerald-400");
+      activeLockCarId = null;
+      document.getElementById("my-lock-timer").innerText = "No Active Lock";
+      document.getElementById("lock-progress").style.width = "0%";
+      renderFleet();
+    }
 
-        // Modal Handlers
-        let selectedSeats = [];
-        function toggleSeat(id) {
-            const el = document.getElementById("seat-" + id);
-            if (selectedSeats.includes(id)) {
-                selectedSeats = selectedSeats.filter(s => s !== id);
-                el.classList.remove("bg-purple-600", "text-white");
-                el.classList.add("bg-purple-950/40", "text-purple-300");
-            } else {
-                selectedSeats.push(id);
-                el.classList.add("bg-purple-600", "text-white");
-                el.classList.remove("bg-purple-950/40", "text-purple-300");
-            }
-            document.getElementById("selected-seats-lbl").innerText = selectedSeats.length ? selectedSeats.join(", ") : "None";
-        }
+    // Scenarios
+    function simulateRaceCondition() {
+      const log = document.getElementById("lab-output");
+      log.innerHTML = `
+        <span class="text-amber-400">Thread #1:</span> User_Alpha requests lock on CAR-03 (Porsche 911) at 15:42:11.002 ... <span class="text-emerald-400">SETNX SUCCESS (Lease Granted)</span><br>
+        <span class="text-cyan-400">Thread #2:</span> User_Beta requests lock on CAR-03 at 15:42:11.003 (+1ms) ... <span class="text-rose-400">HTTP 409 CONFLICT (Rejected: Key Already Held)</span><br>
+        <span class="text-emerald-400 font-bold">RESULT: Zero double-booking. Race condition safely neutralized.</span>
+      `;
+      logEvent("RACE_TEST", "Dual concurrent checkout simulated. Conflict detected & rejected.", "text-rose-400");
+    }
 
-        function confirmSeatLock() {
-            if (!selectedSeats.length) return alert("Select at least one seat first!");
-            logEvent("SEAT_LOCK", `Atomic Redis Lock held on seats [${selectedSeats.join(', ')}] for 10 minutes.`, "text-purple-400");
-            alert(`Seats ${selectedSeats.join(', ')} locked for checkout! Total: $${selectedSeats.length * 15}`);
-            selectedSeats = [];
-            document.getElementById("selected-seats-lbl").innerText = "None";
-        }
+    function simulateLockExpiry() {
+      if (!activeLockCarId) {
+        acquireLock("CAR-02");
+      }
+      lockTimerSeconds = 3;
+      logEvent("TTL_EXPIRY", "Clock forced forward. TTL expires in 3 seconds...", "text-amber-400");
+    }
 
-        function openBookingModal(id, name, price) {
-            document.getElementById("modal-title").innerHTML = `<i class="fa-solid fa-car text-brand"></i> Reserve ${name}`;
-            document.getElementById("modal-body").innerHTML = `
-                <div class="space-y-2">
-                    <p class="text-slate-300">Locking vehicle <strong>${name}</strong> at <strong>$${price}/hr</strong>.</p>
-                    <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800 space-y-1">
-                        <span class="text-slate-400">Security Deposit: <strong class="text-white">$200.00</strong> (Refundable)</span>
-                        <span class="text-slate-400 block">Inventory Lock: <strong class="text-emerald-400">10 Minutes Guaranteed</strong></span>
-                    </div>
-                </div>
-            `;
-            document.getElementById("action-modal").classList.remove("hidden");
-            document.getElementById("modal-confirm-btn").onclick = () => {
-                logEvent("BOOKING_LOCK", `Car ${id} (${name}) locked in Redis. Lease initiated.`, "text-brand");
-                closeModal();
-            };
-        }
+    function simulateDemandSurge() {
+      surgeMultiplier = surgeMultiplier === 1.0 ? 1.25 : 1.0;
+      renderFleet();
+      logEvent("DYNAMIC_PRICING", `Surge multiplier set to ${surgeMultiplier}x based on airport flight arrivals.`, "text-cyan-400");
+    }
 
-        function flashBuy(id, name) {
-            logEvent("ATOMIC_DECR", `Flash order placed for ${name}. Redis lock counter decremented.`, "text-rose-400");
-            const el = document.getElementById("stock-" + id);
-            if (el) {
-                let v = parseInt(el.innerText);
-                if (v > 0) el.innerText = v - 1;
-            }
-            alert(`Atomic Flash Purchase successful for ${name}! Order dispatched.`);
-        }
+    function switchTab(tabId) {
+      ['console', 'scenarios', 'architecture', 'devops'].forEach(t => {
+        document.getElementById('view-' + t).classList.add('hidden');
+        document.getElementById('tab-' + t).classList.remove('active');
+      });
+      document.getElementById('view-' + tabId).classList.remove('hidden');
+      document.getElementById('tab-' + tabId).classList.add('active');
+    }
 
-        function holdBed(id) {
-            logEvent("EMERGENCY_HOLD", `Bed ${id} placed on 15-minute emergency ambulance hold.`, "text-emerald-400");
-            alert(`Emergency hold confirmed for ${id}.`);
-        }
+    function logEvent(tag, message, color) {
+      const stream = document.getElementById("event-stream");
+      const now = new Date().toLocaleTimeString();
+      const div = document.createElement("div");
+      div.className = "p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 text-slate-300";
+      div.innerHTML = `<span class="text-slate-500 text-[10px] block">${now}</span>
+                       <span class="${color} font-bold">[${tag}]</span> ${message}`;
+      stream.prepend(div);
+    }
 
-        function bookToken(id, doc) {
-            logEvent("OPD_TOKEN", `Patient token issued for ${doc}. Wait time approx 8 mins.`, "text-teal-400");
-            alert(`Token generated for ${doc}!`);
-        }
+    function filterFleet(type) {
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("bg-indigo-600", "text-white"));
+      event.target.classList.add("bg-indigo-600", "text-white");
+      renderFleet(type);
+    }
 
-        function tradeOrder(ticker, price) {
-            logEvent("EXEC_ORDER", `Simulated market buy executed for ${ticker} at $${price}.`, "text-sky-400");
-            alert(`Order filled: 10 shares of ${ticker} at $${price}`);
-        }
+    // Auto Periodic Events
+    setInterval(() => {
+      const telemetry = [
+        ["TELEMETRY", "Fleet GPS ping: CAR-01 moving at 64 km/h (Battery 94%).", "text-slate-400"],
+        ["DB_HEARTBEAT", "PostgreSQL connection pool healthy (8/20 active).", "text-emerald-400"],
+        ["METRICS_PUSH", "Prometheus scrape completed in 0.8ms.", "text-cyan-400"]
+      ];
+      const t = telemetry[Math.floor(Math.random() * telemetry.length)];
+      logEvent(t[0], t[1], t[2]);
+    }, 4500);
 
-        function setAlertModal(symbol, price) {
-            logEvent("ALERT_RULE", `Trigger set for ${symbol} when price crosses $${price}.`, "text-amber-400");
-            alert(`Alert created for ${symbol}!`);
-        }
-
-        function bookInspection(id, name) {
-            logEvent("INSPECT_REQ", `Doorstep mechanic inspection scheduled for ${name}.`, "text-orange-400");
-            alert(`Inspection booked for ${name}.`);
-        }
-
-        function openChat(name) {
-            alert(`Starting real-time encrypted chat with seller of ${name}...`);
-        }
-
-        function reserveVilla(id, name, price) {
-            logEvent("VILLA_LOCK", `Dates locked for ${name} at $${price}/night.`, "text-emerald-400");
-            alert(`Reservation hold active for ${name}!`);
-        }
-
-        function reserveBay(bay) {
-            logEvent("BAY_HOLD", `Parking ${bay} reserved. QR access pass generated.`, "text-blue-400");
-            alert(`Reservation confirmed for ${bay}! QR pass sent to terminal.`);
-        }
-
-        function closeModal() {
-            document.getElementById("action-modal").classList.add("hidden");
-        }
-
-        function refreshData() {
-            logEvent("TELEMETRY", "Synced with local engine state. Cache hit ratio 99.8%.", "text-slate-400");
-        }
-
-        // Initialize on page load
-        renderContent();
-    </script>
+    renderFleet();
+  </script>
 </body>
 </html>
