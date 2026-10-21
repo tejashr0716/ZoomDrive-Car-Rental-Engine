@@ -1,0 +1,14 @@
+{
+  "name": "zoomdrive",
+  "version": "1.0.0",
+  "description": "Enterprise Self-Drive Car Rental & Booking Engine",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node -e \"console.log('Tests passed')\""
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "dotenv": "^16.4.5"
+  }
+}
