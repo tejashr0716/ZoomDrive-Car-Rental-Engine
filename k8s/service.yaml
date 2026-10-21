@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: zoomdrive-service
+  namespace: production
+  labels:
+    app: zoomdrive-engine
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 3001
+      protocol: TCP
+      name: http
+  selector:
+    app: zoomdrive-engine
